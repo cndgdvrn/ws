@@ -1,13 +1,18 @@
 package com.boilerplate.ws.user;
 
+import com.boilerplate.ws.email.EmailService;
+import com.boilerplate.ws.user.exception.ActivationMailException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.mail.*;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.UUID;
+
 
 @Service
 public class UserService {
@@ -15,11 +20,25 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    EmailService emailService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Transactional(rollbackOn = MailException.class)
     public void save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        try {
+            String activationToken = UUID.randomUUID().toString();
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setActivationToken(activationToken);
+            userRepository.saveAndFlush(user);
+            emailService.sendUserActivationEmail(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new RuntimeException("Username or email already exists");
+        } catch (MailException ex) {
+            throw new ActivationMailException();
+        }
     }
 
 

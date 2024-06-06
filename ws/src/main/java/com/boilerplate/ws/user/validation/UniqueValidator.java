@@ -1,19 +1,22 @@
 package com.boilerplate.ws.user.validation;
 
+import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
-public class UniqueValidator implements ConstraintValidator<Unique,String> {
+public class UniqueValidator implements ConstraintValidator<Unique, String> {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private MessageSource messageSource;
+
+    @Autowired
+    private OverriddenMessage overriddenMessage;
 
     String fieldName;
 
@@ -36,7 +39,7 @@ public class UniqueValidator implements ConstraintValidator<Unique,String> {
         }
 
         if (exists) {
-            String messageTemplate = messageSource.getMessage("boilerplate.NotUnique." + fieldName, null, LocaleContextHolder.getLocale());
+            String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.NotUnique." + this.fieldName);
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(messageTemplate)
                     .addConstraintViolation();

@@ -2,9 +2,12 @@ package com.boilerplate.ws.user;
 
 import com.boilerplate.ws.error.ApiError;
 import com.boilerplate.ws.shared.GenericMessage;
+import com.boilerplate.ws.shared.OverriddenMessage;
+import com.boilerplate.ws.user.dto.UserCreate;
+import com.boilerplate.ws.user.exception.ActivationMailException;
+import com.boilerplate.ws.user.exception.NotUniqueException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,29 +25,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OverriddenMessage overriddenMessage;
+
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody @Valid User user){
-        System.out.println("----------------------------------------");
-        System.out.println(
-                LocaleContextHolder.getLocale().getLanguage()
-        );
-        System.out.println("----------------------------------------");
-        userService.save(user);
-        return ResponseEntity.status(200).body(new GenericMessage("User created successfully"));
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserCreate user) {
+        String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.user.created.successfully");
+        userService.save(user.toUser());
+        return ResponseEntity.status(200).body(new GenericMessage(messageTemplate));
     }
 
 
-
-
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,WebRequest request) {
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+        String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.validation.error");
         ApiError apiError = new ApiError();
         Map<String, String> validationErrors = new HashMap<>();
         apiError.setStatus(HttpStatus.BAD_REQUEST.value());
         apiError.setPath(request.getDescription(false));
-        apiError.setMessage("Validation errors");
+        apiError.setMessage(messageTemplate);
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             validationErrors.put(error.getField(), error.getDefaultMessage());
         }
@@ -52,20 +52,26 @@ public class UserController {
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
 
-    @ExceptionHandler(NotUniqueException.class)
-    public ResponseEntity<ApiError> handleNotUniqueException(NotUniqueException ex, WebRequest request) {
+    @ExceptionHandler(ActivationMailException.class)
+    public ResponseEntity<ApiError> handleActivationMailException(ActivationMailException ex, WebRequest request){
+        String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.activation.mail.error");
         ApiError apiError = new ApiError();
-        apiError.setStatus(HttpStatus.CONFLICT.value());
-        apiError.setMessage(ex.getMessage());
+        apiError.setStatus(HttpStatus.BAD_GATEWAY.value());
         apiError.setPath(request.getDescription(false));
+        apiError.setMessage(messageTemplate);
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
 
 
-
-
-
-
+    @ExceptionHandler(NotUniqueException.class)
+    public ResponseEntity<ApiError> handleNotUniqueException(NotUniqueException ex, WebRequest request) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.CONFLICT.value());
+        apiError.setMessage("Validation error");
+        apiError.setPath(request.getDescription(false));
+        apiError.setValidationErrors(ex.getValidationErrors());
+        return ResponseEntity.status(apiError.getStatus()).body(apiError);
+    }
 
 
 }

@@ -1,8 +1,11 @@
 package com.boilerplate.ws.error;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiError {
 
     private int status;

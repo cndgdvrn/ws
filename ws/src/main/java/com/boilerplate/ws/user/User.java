@@ -16,20 +16,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 50)
-    @NotBlank(message = "{boilerplate.NotBlank.username}")
-    @Unique(fieldName = "username")
+
     private String username;
 
-
-    @Email
-    @NotBlank(message = "{boilerplate.NotBlank.email}")
-    @Unique(fieldName = "email")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{boilerplate.pattern.password}")
-    @Size(min = 8, max = 255, message = "{boilerplate.size.password}")
     private String password;
+
+    private boolean active = false;
+
+    private String activationToken;
+
+
 
     public User() {
     }
@@ -64,6 +62,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
