@@ -1,5 +1,7 @@
 package com.boilerplate.ws.user;
 
+
+import com.boilerplate.ws.user.validation.Unique;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
 public class User {
 
     @Id
@@ -15,15 +17,18 @@ public class User {
     private Long id;
 
     @Size(min = 3, max = 50)
+    @NotBlank(message = "{boilerplate.NotBlank.username}")
+    @Unique(fieldName = "username")
     private String username;
 
 
     @Email
-    @NotBlank
+    @NotBlank(message = "{boilerplate.NotBlank.email}")
+    @Unique(fieldName = "email")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
-    @Size(min = 8, max = 255)
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{boilerplate.pattern.password}")
+    @Size(min = 8, max = 255, message = "{boilerplate.size.password}")
     private String password;
 
     public User() {

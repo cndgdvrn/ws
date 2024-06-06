@@ -6,6 +6,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -15,12 +18,8 @@ public class UserService {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void save(User user) {
-        try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        }catch (DataIntegrityViolationException ex){
-            throw new NotUniqueEmailException();
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
 
