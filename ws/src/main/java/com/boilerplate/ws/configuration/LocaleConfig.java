@@ -1,4 +1,4 @@
-package com.boilerplate.ws.config;
+package com.boilerplate.ws.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

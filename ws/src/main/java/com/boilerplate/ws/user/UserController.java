@@ -54,6 +54,7 @@ public class UserController {
 
     @ExceptionHandler(ActivationMailException.class)
     public ResponseEntity<ApiError> handleActivationMailException(ActivationMailException ex, WebRequest request){
+        System.out.println(ex.getMessage());
         String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.activation.mail.error");
         ApiError apiError = new ApiError();
         apiError.setStatus(HttpStatus.BAD_GATEWAY.value());
