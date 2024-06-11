@@ -3,6 +3,7 @@ package com.boilerplate.ws.email;
 import com.boilerplate.ws.configuration.BoilerplateProperties;
 import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.User;
+import com.boilerplate.ws.user.exception.ActivationMailException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class EmailService {
             mimeMessageHelper.setText(htmlContent,true);
             getJavaMailSender().send(mimeMessage);
         } catch (MessagingException e) {
-            throw new RuntimeException("Email service içerisinde hata meydana geldi EmailService.java dosyasını kontrol et");
+            throw new ActivationMailException("MessagingException thrown while sending activation email");
         }
 
     }

@@ -5,6 +5,7 @@ import com.boilerplate.ws.shared.GenericMessage;
 import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.dto.UserCreate;
 import com.boilerplate.ws.user.exception.ActivationMailException;
+import com.boilerplate.ws.user.exception.InvalidTokenException;
 import com.boilerplate.ws.user.exception.NotUniqueException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class UserController {
         return ResponseEntity.status(200).body(new GenericMessage(messageTemplate));
     }
 
+    @GetMapping("/activate")
+    public ResponseEntity<?> activateUser(@RequestParam String token) {
+        userService.activateUser(token);
+        String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.activation.user.successfully");
+        return ResponseEntity.status(200).body(new GenericMessage(messageTemplate));
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
@@ -53,16 +60,14 @@ public class UserController {
     }
 
     @ExceptionHandler(ActivationMailException.class)
-    public ResponseEntity<ApiError> handleActivationMailException(ActivationMailException ex, WebRequest request){
-        System.out.println(ex.getMessage());
+    public ResponseEntity<ApiError> handleActivationMailException(ActivationMailException ex, WebRequest request) {
         String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.activation.mail.error");
         ApiError apiError = new ApiError();
         apiError.setStatus(HttpStatus.BAD_GATEWAY.value());
         apiError.setPath(request.getDescription(false));
-        apiError.setMessage(messageTemplate);
+        apiError.setMessage(messageTemplate + " / " + ex.getMessage());
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
-
 
     @ExceptionHandler(NotUniqueException.class)
     public ResponseEntity<ApiError> handleNotUniqueException(NotUniqueException ex, WebRequest request) {
@@ -74,6 +79,15 @@ public class UserController {
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ApiError> handleInvalidTokenException(InvalidTokenException ex,WebRequest request){
+        String messageTemplate = overriddenMessage.getMessageFromLocale("boilerplate.activation.user.error");
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.BAD_REQUEST.value());
+        apiError.setPath(request.getDescription(false) + "/?token=" + ex.getMessage());
+        apiError.setMessage(messageTemplate);
+        return ResponseEntity.status(apiError.getStatus()).body(apiError);
+    }
 
 }
 

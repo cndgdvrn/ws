@@ -11,6 +11,10 @@ public class ActivationMailException extends RuntimeException {
         super();
     }
 
+    public ActivationMailException(String message) {
+        super(message);
+    }
+
     public ActivationMailException(Map<String, String> validationErrors) {
         super();
         this.validationErrors = validationErrors;
