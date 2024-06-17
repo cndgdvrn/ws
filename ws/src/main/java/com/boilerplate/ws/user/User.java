@@ -1,12 +1,7 @@
 package com.boilerplate.ws.user;
 
 
-import com.boilerplate.ws.user.validation.Unique;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
@@ -15,7 +10,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     private String username;
 
@@ -27,6 +21,7 @@ public class User {
 
     private String activationToken;
 
+    private String image;
 
 
     public User() {
@@ -79,6 +74,16 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
     @Override
     public String toString() {

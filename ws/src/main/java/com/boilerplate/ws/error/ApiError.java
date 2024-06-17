@@ -43,7 +43,7 @@ public class ApiError {
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.path = path.split("uri=")[1];
     }
 
     public Long getTimestamp() {

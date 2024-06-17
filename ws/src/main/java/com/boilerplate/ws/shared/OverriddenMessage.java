@@ -5,6 +5,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
+
 @Component
 public class OverriddenMessage {
 
@@ -13,5 +15,10 @@ public class OverriddenMessage {
 
     public String getMessageFromLocale(String key) {
         return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+    }
+
+    public String getMessageFromLocale(String key, Object... args) {
+        String message = messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+        return MessageFormat.format(message, args);
     }
 }

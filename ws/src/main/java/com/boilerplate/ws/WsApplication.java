@@ -1,6 +1,6 @@
 package com.boilerplate.ws;
 
-import com.boilerplate.ws.error.ApiError;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
