@@ -1,6 +1,7 @@
 package com.boilerplate.ws.user;
 
 import com.boilerplate.ws.auth.token.TokenService;
+import com.boilerplate.ws.configuration.CurrentUser;
 import com.boilerplate.ws.shared.GenericMessage;
 import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.dto.UserCreate;
@@ -13,10 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.Base64;
 
 
 @RestController()
@@ -29,8 +28,6 @@ public class UserController {
     @Autowired
     private OverriddenMessage overriddenMessage;
 
-    @Autowired
-    private TokenService tokenService;
 
 
     @PostMapping
@@ -50,9 +47,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getUsers(
             @PageableDefault(size = 5) Pageable pageable,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        User currentUser = tokenService.verifyToken(authorizationHeader);
-        Page<UserDTO> users = userService.getUsers(pageable, currentUser).map(UserDTO::new);
+            @AuthenticationPrincipal CurrentUser principal
+    ) {
+//        User currentUser = tokenService.verifyToken(authorizationHeader);
+        Page<UserDTO> users = userService.getUsers(pageable, principal.getUser()).map(UserDTO::new);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
@@ -60,11 +58,11 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
             @RequestBody(required = false) @Valid UserUpdate userUpdate,
-            @RequestHeader(value="Authorization",required = false) String authorizationHeader) {
-        User currentUser = tokenService.verifyToken(authorizationHeader);
-        User updatedUser = userService.updateUser(id, userUpdate, currentUser);
-        UserDTO userDTO = new UserDTO(updatedUser);
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+            @AuthenticationPrincipal CurrentUser principal
+    ) {
+//        CurrentUser principal = (CurrentUser) authentication.getPrincipal();
+        User updatedUser = userService.updateUser(id, userUpdate, principal.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(new UserDTO(updatedUser));
     }
 
     @PatchMapping("/activate")

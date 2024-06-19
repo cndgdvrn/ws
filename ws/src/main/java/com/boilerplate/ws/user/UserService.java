@@ -1,14 +1,12 @@
 package com.boilerplate.ws.user;
 
 import com.boilerplate.ws.email.EmailService;
-import com.boilerplate.ws.user.dto.UserDTO;
 import com.boilerplate.ws.user.dto.UserUpdate;
 import com.boilerplate.ws.user.exception.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.*;
 
@@ -16,11 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @Service

@@ -109,4 +109,6 @@ public class ErrorHandler {
         apiError.setPath(request.getDescription(false));
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
     }
+
+
 }

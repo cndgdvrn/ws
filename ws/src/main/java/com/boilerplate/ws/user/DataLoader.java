@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +15,7 @@ public class DataLoader implements CommandLineRunner {
     private UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
@@ -24,6 +25,9 @@ public class DataLoader implements CommandLineRunner {
             user.setEmail("user"+i+"@mail.com");
             user.setPassword(passwordEncoder.encode("P4ssword"));
             user.setActive(true);
+            if(i==1){
+                user.setActive(false);
+            }
             user.setActivationToken(null);
             userRepository.save(user);
         }
