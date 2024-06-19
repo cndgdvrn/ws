@@ -1,6 +1,7 @@
 package com.boilerplate.ws.user;
 
 import com.boilerplate.ws.email.EmailService;
+import com.boilerplate.ws.file.FileService;
 import com.boilerplate.ws.user.dto.UserUpdate;
 import com.boilerplate.ws.user.exception.*;
 import jakarta.transaction.Transactional;
@@ -23,13 +24,17 @@ import java.util.UUID;
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private FileService fileService;
+
 
     @Transactional(rollbackOn = MailException.class)
     public void save(User user) {
@@ -86,14 +91,22 @@ public class UserService {
     }
 
     public User updateUser(Long id, UserUpdate userUpdate,User currentUser) {
-
         if (userUpdate == null) throw new RuntimeException("UserUpdate object is null");
         if(currentUser == null || !Objects.equals(currentUser.getId(), id)){
             throw new AuthorizationException();
         }
-
         User userInDB = getUser(id);
-        userInDB.setUsername(userUpdate.getUsername());
+        if(userUpdate.getUsername() != null){
+            userInDB.setUsername(userUpdate.getUsername());
+        }
+        if(userUpdate.getImage() != null){
+            String oldImage = userInDB.getImage();
+            String filename = fileService.saveProfileImage(userUpdate.getImage());
+            userInDB.setImage(filename);
+            if (oldImage != null) {
+                fileService.deleteProfileImage(oldImage);
+            }
+        }
         return userRepository.save(userInDB);
 
     }

@@ -1,4 +1,4 @@
-package com.boilerplate.ws.configuration;
+package com.boilerplate.ws.configuration.application_properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

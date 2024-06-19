@@ -1,6 +1,6 @@
 package com.boilerplate.ws.email;
 
-import com.boilerplate.ws.configuration.BoilerplateProperties;
+import com.boilerplate.ws.configuration.application_properties.BoilerplateProperties;
 import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.User;
 import com.boilerplate.ws.user.exception.ActivationMailException;

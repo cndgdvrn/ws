@@ -1,5 +1,6 @@
 package com.boilerplate.ws.beans;
 
+import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -17,6 +18,11 @@ public class Beans {
     @Bean
     public SimpleMailMessage getSimpleMailMessage(){
         return new SimpleMailMessage();
+    }
+
+    @Bean
+    public Tika getTika(){
+        return new Tika();
     }
 
 

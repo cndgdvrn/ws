@@ -1,4 +1,4 @@
-package com.boilerplate.ws.configuration;
+package com.boilerplate.ws.configuration.application_properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

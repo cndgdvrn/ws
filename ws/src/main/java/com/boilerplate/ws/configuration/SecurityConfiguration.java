@@ -23,7 +23,7 @@ public class SecurityConfiguration {
                 authentication.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/users/{id}")).authenticated()
                         .anyRequest().permitAll()
         );
-        http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(httpBasic-> httpBasic.authenticationEntryPoint(new CustomAuthEntryPoint()));
         http.csrf(csrf-> csrf.disable());
         http.headers(headers -> headers.disable());
         return http.build();
