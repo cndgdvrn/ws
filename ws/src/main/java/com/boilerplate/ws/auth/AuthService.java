@@ -9,6 +9,7 @@ import com.boilerplate.ws.user.User;
 import com.boilerplate.ws.user.UserService;
 import com.boilerplate.ws.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     @Autowired
+//    @Qualifier("basicAuthTokenService")
+    @Qualifier("jwtTokenService")
     TokenService tokenService;
 
     @Autowired

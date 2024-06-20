@@ -25,7 +25,7 @@ public class DataLoader implements CommandLineRunner {
             user.setEmail("user"+i+"@mail.com");
             user.setPassword(passwordEncoder.encode("P4ssword"));
             user.setActive(true);
-            if(i==1){
+            if(i==2){
                 user.setActive(false);
             }
             user.setActivationToken(null);

@@ -1,16 +1,20 @@
 package com.boilerplate.ws.error;
 
+import com.boilerplate.ws.auth.exception.CustomJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
+
+
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ApiError> handleDisabledException(DisabledException ex, HttpServletRequest request) {
@@ -29,5 +33,6 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         apiError.setStatus(403);
         return ResponseEntity.status(403).body(apiError);
     }
+
 
 }

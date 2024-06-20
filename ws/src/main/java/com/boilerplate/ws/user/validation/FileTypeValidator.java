@@ -23,6 +23,9 @@ public class FileTypeValidator implements ConstraintValidator<FileType, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+
+        if (value == null || value.isEmpty()) return true;
+
         String detectedFileType = fileService.detectFileType(value);
         for (String allowedType : allowedTypes) {
             if (detectedFileType.contains(allowedType)) {

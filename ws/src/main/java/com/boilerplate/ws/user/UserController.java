@@ -49,7 +49,6 @@ public class UserController {
             @PageableDefault(size = 5) Pageable pageable,
             @AuthenticationPrincipal CurrentUser principal
     ) {
-//        User currentUser = tokenService.verifyToken(authorizationHeader);
         Page<UserDTO> users = userService.getUsers(pageable, principal.getUser()).map(UserDTO::new);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
@@ -60,7 +59,6 @@ public class UserController {
             @RequestBody(required = false) @Valid UserUpdate userUpdate,
             @AuthenticationPrincipal CurrentUser principal
     ) {
-//        CurrentUser principal = (CurrentUser) authentication.getPrincipal();
         User updatedUser = userService.updateUser(id, userUpdate, principal.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(new UserDTO(updatedUser));
     }

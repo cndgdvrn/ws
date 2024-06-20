@@ -1,8 +1,11 @@
 package com.boilerplate.ws.error;
 
 import com.boilerplate.ws.auth.exception.CustomAuthenticationException;
+import com.boilerplate.ws.auth.exception.CustomJwtException;
 import com.boilerplate.ws.shared.OverriddenMessage;
 import com.boilerplate.ws.user.exception.*;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,5 +113,14 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiError);
     }
 
+
+    @ExceptionHandler(CustomJwtException.class)
+    public ResponseEntity<ApiError> handleException(CustomJwtException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError();
+        apiError.setMessage("Error handler catched exception");
+        apiError.setPath(request.getRequestURI());
+        apiError.setStatus(400);
+        return ResponseEntity.status(400).body(apiError);
+    }
 
 }

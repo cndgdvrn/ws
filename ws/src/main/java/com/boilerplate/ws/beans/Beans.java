@@ -1,5 +1,6 @@
 package com.boilerplate.ws.beans;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,6 +24,11 @@ public class Beans {
     @Bean
     public Tika getTika(){
         return new Tika();
+    }
+
+    @Bean
+    public ObjectMapper getObjectMapper(){
+        return new ObjectMapper();
     }
 
 
