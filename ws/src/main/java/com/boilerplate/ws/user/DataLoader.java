@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Profile("development")
 public class DataLoader implements CommandLineRunner {
@@ -19,6 +21,10 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        Optional<User> userInDB = userRepository.findById(1L);
+        if(userInDB.isPresent()){
+            return;
+        }
         for(int i=1; i<20; i++){
             User user = new User();
             user.setUsername("user"+i);

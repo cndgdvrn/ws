@@ -35,7 +35,8 @@ public class BasicAuthTokenService implements TokenService {
         String email = credentials[0];
         String password = credentials[1];
         User user = userService.getUserByEmail(email);
-        if (user == null || !(passwordEncoder.matches(password, user.getPassword()))) return null;
+        if (user == null ) return null;
+        if (!passwordEncoder.matches(password, user.getPassword())) return null;
         return user;
     }
 

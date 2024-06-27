@@ -1,4 +1,4 @@
-package com.boilerplate.ws.beans;
+package com.boilerplate.ws.configuration.beans;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tika.Tika;

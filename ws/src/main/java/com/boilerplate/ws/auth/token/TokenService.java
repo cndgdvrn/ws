@@ -8,4 +8,10 @@ public interface TokenService {
     public Token createToken(User user, Credentials creds);
 
     public User verifyToken(String authorizationHeader);
+
+    default public String extractToken(String authorizationHeader){
+        if (authorizationHeader == null) return null;
+        return authorizationHeader.split(" ")[1];
+    };
+
 }

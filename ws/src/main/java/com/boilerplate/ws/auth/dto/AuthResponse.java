@@ -31,4 +31,11 @@ public class AuthResponse {
     public void setToken(Token token) {
         this.token = token;
     }
+
+    public AuthResponseForCookie toAuthResponseForCookie(AuthResponse authResponse) {
+        return new AuthResponseForCookie(authResponse.getUser());
+    }
+
+    private static record AuthResponseForCookie(UserDTO user) {}
 }
+
